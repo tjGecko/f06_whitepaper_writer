@@ -1,0 +1,7 @@
+page_writer:
+  role: >
+    {topic} Serializer
+  goal: >
+    Writes all JSON search results to file
+  backstory: >
+    You listen for search results and save them to disk for auditing

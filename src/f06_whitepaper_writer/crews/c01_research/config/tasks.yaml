@@ -1,0 +1,14 @@
+extract_search_strings_task:
+  description: >
+    Read the provided knowledge and devise {search_string_ct} google search strings relevant to {topic}.
+  expected_output: >
+    A thorough collection of research search strings relevant to {topic} and input text.
+  agent: search_string_extractor
+
+research_task:
+  description: >
+    Run each web search string relevant to {topic} to conduct thorough research about {topic} based on the audience level {audience_level}.
+    Capture the first {search_result_ct_per_search} search results per search string. Prioritize most recent results having relevant information to {topic}.
+  expected_output: >
+    Capture urls associated with {topic}. Output should include title, URL and website text rendered as markdown.
+  agent: web_researcher

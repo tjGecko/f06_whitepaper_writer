@@ -1,0 +1,7 @@
+page_writer_task:
+  description: >
+    Each entry to JSON file.
+  expected_output: >
+    Write JSON files including title, URL and markdown text.
+  agent: page_writer
+
