@@ -4,12 +4,12 @@ from pathlib import Path
 
 from crewai.flow.flow import Flow, listen, start
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from .crews.c02_crawler.c02_crawler import C02Crawler, FileWriterInput
 from .crews.c01_research.c01_research import C01ResearchCrew, WebResearchOutput
 from .crews.p01_config import input_variables
-
 
 
 class LongFormWriterFlow(Flow):
@@ -26,11 +26,34 @@ class LongFormWriterFlow(Flow):
     def save_research_results(self, web_research: WebResearchOutput):
         for research_entry in web_research.research_entries:
             self.result_ct += 1
-            crew2_inputs = self.input_dict.copy()
-            crew2_inputs['input_ctx'] = FileWriterInput(
-                abs_file=self.output_dir /f'result_{self.result_ct}.json',
-                content=research_entry.model_dump_json()
-            )
+
+            abs_file = str(self.output_dir / f'result_{self.result_ct}.json')
+            content = research_entry.model_dump_json()
+
+            crew2_inputs = {
+                "input_ctx": {
+                    "abs_file": abs_file,
+                    "content": content
+                }
+            }
+
+            # crew2_inputs = self.input_dict.copy()
+            # crew2_inputs['input_ctx'] = {
+            #     "abs_file": str(self.output_dir / f'result_{self.result_ct}.json'),
+            #     "content": research_entry.model_dump_json()
+            # }
+            # crew2_inputs = {
+            #     "input_ctx": {
+            #         "abs_file": str(self.output_dir /f'result_{self.result_ct}.json'),
+            #         "content": research_entry.model_dump_json()
+            #     }
+            # }
+
+            # crew2_inputs = self.input_dict.copy()
+            # crew2_inputs['input_ctx'] = FileWriterInput(
+            #     abs_file=self.output_dir /f'result_{self.result_ct}.json',
+            #     content=research_entry.model_dump_json()
+            # ).model_dump_json()
             # crew2_inputs['abs_file'] = self.output_dir /f'result_{self.result_ct}.json'
             # crew2_inputs['content'] = research_entry.model_dump_json()
             C02Crawler().crew().kickoff(crew2_inputs)

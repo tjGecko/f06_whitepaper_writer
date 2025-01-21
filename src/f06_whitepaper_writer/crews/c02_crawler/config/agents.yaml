@@ -1,6 +1,6 @@
 page_writer:
   role: >
-    {topic} Serializer
+    JSON File Serializer
   goal: >
     Writes all JSON search results to file
   backstory: >

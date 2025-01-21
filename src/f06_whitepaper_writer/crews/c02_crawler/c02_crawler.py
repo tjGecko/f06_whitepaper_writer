@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 class FileWriterInput(BaseModel):
-    abs_file: Path = Field(..., description="Absolute path of the file to write")
+    abs_file: str = Field(..., description="Absolute path of the file to write")
     content: str = Field(..., description="Text to write to file")
 
 
@@ -20,12 +20,13 @@ class FileWriterTool(BaseTool):
 
     def _run(self, input_ctx: FileWriterInput) -> str:
         try:
-            with input_ctx.abs_file.open("w", encoding="utf-8") as fout:
+            abs_path = Path(input_ctx.abs_file)  # Convert back to Path for file operations
+            with abs_path.open("w", encoding="utf-8") as fout:
                 fout.write(input_ctx.content)
-                return f"Content successfully written to {input_ctx.abs_file}"
+                return f"Content successfully written to {abs_path}"
         except Exception as e:
             print(f"Error writing to file: {e}")
-        return f"Failed to write to {input_ctx.abs_file}: {str(e)}"
+        return f"Failed to write to {abs_path}: {str(e)}"
 
 
 @CrewBase
