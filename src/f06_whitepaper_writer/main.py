@@ -26,7 +26,8 @@ class LongFormWriterFlow(Flow):
         for research_entry in web_research.research_entries:
             crew2_inputs = self.input_dict.copy()
 
-            crew2_inputs['description'] = 'Serialize the content field JSON and save to abs_file path'
+            # crew2_inputs['agent'] = 'page_writer'
+            # crew2_inputs['description'] = 'Serialize the content field JSON and save to abs_file path'
             crew2_inputs["directory"] = self.output_dir
             crew2_inputs["filename"] = f'result_{research_entry.content_hash}.json'
             crew2_inputs["content"] = research_entry.model_dump_json()
