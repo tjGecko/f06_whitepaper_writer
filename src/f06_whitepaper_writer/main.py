@@ -29,19 +29,23 @@ class LongFormWriterFlow(Flow):
 
             abs_file = str(self.output_dir / f'result_{self.result_ct}.json')
             content = research_entry.model_dump_json()
+            crew2_inputs = self.input_dict.copy()
 
-            crew2_inputs = {
-                "input_ctx": {
-                    "abs_file": abs_file,
-                    "content": content
-                }
-            }
+            crew2_inputs['description'] = 'Serialize the content field JSON and save to abs_file path'
+            crew2_inputs["abs_file"] = abs_file
+            crew2_inputs["content"] = content
+            C02Crawler().crew().kickoff(crew2_inputs)
 
-            # crew2_inputs = self.input_dict.copy()
-            # crew2_inputs['input_ctx'] = {
-            #     "abs_file": str(self.output_dir / f'result_{self.result_ct}.json'),
-            #     "content": research_entry.model_dump_json()
+            # crew2_inputs = {
+            #     "input_ctx": {
+            #         "abs_file": abs_file,
+            #         "content": content
+            #     }
             # }
+
+            # crew2_inputs["abs_file"] = abs_file
+            # crew2_inputs["content"] = content
+
             # crew2_inputs = {
             #     "input_ctx": {
             #         "abs_file": str(self.output_dir /f'result_{self.result_ct}.json'),
@@ -56,7 +60,7 @@ class LongFormWriterFlow(Flow):
             # ).model_dump_json()
             # crew2_inputs['abs_file'] = self.output_dir /f'result_{self.result_ct}.json'
             # crew2_inputs['content'] = research_entry.model_dump_json()
-            C02Crawler().crew().kickoff(crew2_inputs)
+            # C02Crawler().crew().kickoff(crew2_inputs)
 
 
 def kickoff():

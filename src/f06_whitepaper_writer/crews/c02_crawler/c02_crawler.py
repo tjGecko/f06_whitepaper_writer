@@ -6,27 +6,27 @@ import os
 from pathlib import Path
 
 
-# from crewai_tools import FileWriterTool
+from crewai_tools import FileWriterTool
 
 
-class FileWriterInput(BaseModel):
-    abs_file: str = Field(..., description="Absolute path of the file to write")
-    content: str = Field(..., description="Text to write to file")
-
-
-class FileWriterTool(BaseTool):
-    name: str = "FileWriterTool"
-    description: str = "Writes given content to a specified file."
-
-    def _run(self, input_ctx: FileWriterInput) -> str:
-        try:
-            abs_path = Path(input_ctx.abs_file)  # Convert back to Path for file operations
-            with abs_path.open("w", encoding="utf-8") as fout:
-                fout.write(input_ctx.content)
-                return f"Content successfully written to {abs_path}"
-        except Exception as e:
-            print(f"Error writing to file: {e}")
-        return f"Failed to write to {abs_path}: {str(e)}"
+# class FileWriterInput(BaseModel):
+#     abs_file: str = Field(..., description="Absolute path of the file to write")
+#     content: str = Field(..., description="Text to write to file")
+#
+#
+# class FileWriterTool(BaseTool):
+#     name: str = "FileWriterTool"
+#     description: str = "Writes given content to a specified file."
+#
+#     def _run(self, input_ctx: FileWriterInput) -> str:
+#         try:
+#             abs_path = Path(input_ctx.abs_file)  # Convert back to Path for file operations
+#             with abs_path.open("w", encoding="utf-8") as fout:
+#                 fout.write(input_ctx.content)
+#                 return f"Content successfully written to {abs_path}"
+#         except Exception as e:
+#             print(f"Error writing to file: {e}")
+#         return f"Failed to write to {abs_path}: {str(e)}"
 
 
 @CrewBase
@@ -69,5 +69,5 @@ class C02Crawler:
             agents=self.agents,  # Automatically created by the @agent decorator
             tasks=self.tasks,  # Automatically created by the @task decorator
             process=Process.sequential,
-            verbose=True,
+            verbose=True
         )

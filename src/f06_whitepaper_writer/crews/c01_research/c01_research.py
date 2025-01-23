@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, task, crew
-from crewai_tools import SerperDevTool, FileReadTool
+from crewai_tools import SerperDevTool, FileReadTool, ScrapeWebsiteTool, WebsiteSearchTool
 import os
 import time
 
@@ -42,6 +42,8 @@ class C01ResearchCrew:
 
     # Define the tools
     search_tool = SerperDevTool()
+    scrape_tool = ScrapeWebsiteTool()
+    web_rag_tool = WebsiteSearchTool()
     file_readers = []
 
     def __post_init__(self):
@@ -62,7 +64,7 @@ class C01ResearchCrew:
         """Agent responsible for conducting web searches and scraping content."""
         return Agent(
             config=self.agents_config['web_researcher'],
-            tools=[self.search_tool],
+            tools=[self.search_tool, self.scrape_tool, self.web_rag_tool],
             verbose=True
         )
 

@@ -1,7 +1,17 @@
 page_writer_task:
   description: >
-    Each entry to JSON file.
+    Write each entry to JSON file.
   expected_output: >
-    Write JSON files including title, URL and markdown text.
+    You will be provided an input dictionary with the keys: description, abs_file, content. 
+    1. Examine the description field
+    2. Create a JSON file at the absolute path: {abs_file}
+    3. The content field will contain the JSON string version of a single RawResearchEntry object
+    4. Write the JSON content to this file: 
+    
+    ---
+    {content}
+    ---
+    
+    5. Return a write status flag of either: WRITE_SUCCESS or WRITE_FAIL
   agent: page_writer
 
