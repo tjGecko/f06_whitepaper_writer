@@ -2,9 +2,9 @@ page_writer_task:
   description: >
     Write each entry to JSON file.
   expected_output: >
-    You will be provided an input dictionary with the keys: description, abs_file, content. 
-    1. Examine the description field
-    2. Create a JSON file at the absolute path: {abs_file}
+    You will be provided an input dictionary with the keys: description, directory, filename, content. 
+    1. Examine the input dictionary
+    2. Create a JSON file at the absolute path built from directory: {directory} and file name: {filename}.
     3. The content field will contain the JSON string version of a single RawResearchEntry object
     4. Write the JSON content to this file: 
     

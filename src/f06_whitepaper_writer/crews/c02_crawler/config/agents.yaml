@@ -4,4 +4,4 @@ page_writer:
   goal: >
     Writes all JSON search results to file
   backstory: >
-    You listen for search results and save them to disk for auditing
+    You listen for search results of data type WebResearchOutput and save each result to disk for auditing
