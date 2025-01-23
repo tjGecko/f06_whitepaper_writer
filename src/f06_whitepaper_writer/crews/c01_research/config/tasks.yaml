@@ -3,6 +3,9 @@ extract_search_strings_task:
     Read the provided knowledge and devise {search_string_ct} google search strings relevant to {topic}.
   expected_output: >
     A thorough collection of research search strings relevant to {topic} and input text.
+    1. Read text provided to you
+    2. Generate a collection of search strings
+    3. Return SearchStringExtractionOutput
   agent: search_string_extractor
 
 research_task:
@@ -11,4 +14,14 @@ research_task:
     Capture the first {search_result_ct_per_search} search results per search string. Prioritize most recent results having relevant information to {topic}.
   expected_output: >
     Capture urls associated with {topic}. Output should include title, URL and website text rendered as markdown.
+    1. Receive SearchStringExtractionOutput
+    2. Execute each search string
+    3. Generate an initial search result set of urls and descriptions from internet search
+    4. Scrape each of the page content from the url result set
+    5. Build RawResearchEntry objects for each url in the result set
+    6. You can summarize the content to generate a new title if the original title is longer than 7 words. All titles
+    should be less than 8 words.
+    7. Save the appropriate title to RawResearchEntry 
+    8. Build WebResearchOutput objects from lists of RawResearchEntry objects corresponding to each initial web search string
+    9. Return WebResearchOutput objects
   agent: web_researcher
