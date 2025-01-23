@@ -64,7 +64,8 @@ class C01ResearchCrew:
         """Agent responsible for conducting web searches and scraping content."""
         return Agent(
             config=self.agents_config['web_researcher'],
-            tools=[self.search_tool, self.scrape_tool, self.web_rag_tool],
+            tools=[self.search_tool],
+            # tools=[self.search_tool, self.scrape_tool, self.web_rag_tool],
             verbose=True
         )
 

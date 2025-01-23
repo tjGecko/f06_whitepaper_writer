@@ -54,9 +54,7 @@ class C02Crawler:
     def page_writer_task(self) -> Task:
         """Task to save research results as JSON files."""
         return Task(
-            description="Save the web research results to JSON files.",
             agent=self.page_writer(),
-            expected_output="JSON file named using the result_id."
         )
 
     @crew
