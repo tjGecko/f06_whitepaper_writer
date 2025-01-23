@@ -21,7 +21,8 @@ research_task:
     5. Build RawResearchEntry objects for each url in the result set
     6. You can summarize the content to generate a new title if the original title is longer than 7 words. All titles
     should be less than 8 words.
-    7. Save the appropriate title to RawResearchEntry 
-    8. Build WebResearchOutput objects from lists of RawResearchEntry objects corresponding to each initial web search string
-    9. Return WebResearchOutput objects
+    7. Save the appropriate title to RawResearchEntry. 
+    8. Each RawResearchEntry URL must be an original, unchanged URL from SearchStringExtractionOutput
+    9. Build WebResearchOutput objects from lists of RawResearchEntry objects corresponding to each initial web search string
+    10. Return WebResearchOutput objects
   agent: web_researcher
