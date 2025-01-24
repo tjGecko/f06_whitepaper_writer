@@ -1,12 +1,7 @@
-page_writer_task:
+research_task:
   description: >
-    Write each entry to JSON file.
+    Run each web search string relevant to {topic} to conduct thorough research about {topic} based on the audience level {audience_level}.
+    Capture the first {search_result_ct_per_search} search results per search string. Prioritize most recent results having relevant information to {topic}.
   expected_output: >
-    You will be provided an input dictionary with the keys: directory, filename, content. 
-    1. Examine the input dictionary
-    2. Create a JSON file at the absolute path built from directory: {directory} and file name: {filename}.
-    3. Interpret the content field as a string version of JSON. Attempt to interpret JSON data structure and clean up formatting.
-    4. Write the JSON content to pretty formatted, JSON file.
-    6. Return a write status flag of either: WRITE_SUCCESS or WRITE_FAIL
-  agent: page_writer
-
+    Capture urls associated with {topic}.
+  agent: web_researcher
