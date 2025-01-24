@@ -8,21 +8,4 @@ extract_search_strings_task:
     3. Return SearchStringExtractionOutput
   agent: search_string_extractor
 
-research_task:
-  description: >
-    Run each web search string relevant to {topic} to conduct thorough research about {topic} based on the audience level {audience_level}.
-    Capture the first {search_result_ct_per_search} search results per search string. Prioritize most recent results having relevant information to {topic}.
-  expected_output: >
-    Capture urls associated with {topic}. Output should include title, URL and website text rendered as markdown.
-    1. Receive SearchStringExtractionOutput
-    2. Execute each search string
-    3. Generate an initial search result set of urls and descriptions from internet search
-    4. Scrape each of the page content from the url result set
-    5. Build RawResearchEntry objects for each url in the result set
-    6. You can summarize the content to generate a new title if the original title is longer than 7 words. All titles
-    should be less than 8 words.
-    7. Save the appropriate title to RawResearchEntry. 
-    8. Each RawResearchEntry URL must be an original, unchanged URL from SearchStringExtractionOutput
-    9. Build WebResearchOutput objects from lists of RawResearchEntry objects corresponding to each initial web search string
-    10. Return WebResearchOutput objects
-  agent: web_researcher
+
