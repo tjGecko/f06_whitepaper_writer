@@ -1,64 +1,49 @@
 #!/usr/bin/env python
+import json
 import os
-from pathlib import Path
-
 from crewai.flow.flow import Flow, listen, start
+from pathlib import Path
 from dotenv import load_dotenv
-
 load_dotenv()
 
-from .crews.c02_crawler.c02_crawler import C02Crawler
-from .crews.c01_research.c01_research import C01ResearchCrew, WebResearchOutput
-from .crews.p01_config import input_variables
+from f06_whitepaper_writer.crews.p01_config import input_variables
+from f06_whitepaper_writer.crews.c01_research.c01_research import C01ResearchCrew, SearchStringExtractionOutput
+from f06_whitepaper_writer.crews.c02_crawler.c02_crawler import C02Crawler, WebResearchOutput, RawResearchEntry
+from f06_whitepaper_writer.crews.c03_scraper.c03_scraper import C03Scraper, ScrapeResult
 
 
 class LongFormWriterFlow(Flow):
     input_dict = input_variables
-    output_dir = os.getenv('WEB_SEARCH_OUTPUT_DIR')
+    output_dir = Path(os.getenv('WEB_SEARCH_OUTPUT_DIR'))
 
     @start()
-    def generate_researched_content(self):
-        print(self.input_dict)
-        return C01ResearchCrew().crew().kickoff(self.input_dict).pydantic
+    def create_search_strings(self):
+        return C01ResearchCrew().crew().kickoff(input_variables).pydantic
 
-    @listen(generate_researched_content)
-    def save_research_results(self, web_research: WebResearchOutput):
-        for research_entry in web_research.research_entries:
+    @listen(create_search_strings)
+    def run_google_search(self, search_strings: SearchStringExtractionOutput):
+        for search_string in search_strings:
             crew2_inputs = self.input_dict.copy()
+            crew2_inputs['search_string'] = search_string
+            return C02Crawler().crew().kickoff(crew2_inputs).pydantic
 
-            # crew2_inputs['agent'] = 'page_writer'
-            # crew2_inputs['description'] = 'Serialize the content field JSON and save to abs_file path'
-            crew2_inputs["directory"] = self.output_dir
-            crew2_inputs["filename"] = f'result_{research_entry.content_hash}.json'
-            crew2_inputs["content"] = research_entry.model_dump_json()
-            C02Crawler().crew().kickoff(crew2_inputs)
+    @listen(run_google_search)
+    def scrape_pages(self, research: WebResearchOutput):
+        for url in research:
+            crew3_inputs = self.input_dict.copy()
+            crew3_inputs['scrape_url'] = url
+            return C03Scraper().crew().kickoff(crew3_inputs).pydantic
 
-            # crew2_inputs = {
-            #     "input_ctx": {
-            #         "abs_file": abs_file,
-            #         "content": content
-            #     }
-            # }
-
-            # crew2_inputs["abs_file"] = abs_file
-            # crew2_inputs["content"] = content
-
-            # crew2_inputs = {
-            #     "input_ctx": {
-            #         "abs_file": str(self.output_dir /f'result_{self.result_ct}.json'),
-            #         "content": research_entry.model_dump_json()
-            #     }
-            # }
-
-            # crew2_inputs = self.input_dict.copy()
-            # crew2_inputs['input_ctx'] = FileWriterInput(
-            #     abs_file=self.output_dir /f'result_{self.result_ct}.json',
-            #     content=research_entry.model_dump_json()
-            # ).model_dump_json()
-            # crew2_inputs['abs_file'] = self.output_dir /f'result_{self.result_ct}.json'
-            # crew2_inputs['content'] = research_entry.model_dump_json()
-            # C02Crawler().crew().kickoff(crew2_inputs)
-
+    @listen(scrape_pages)
+    def save_text(self, scraped_result: ScrapeResult):
+        abs_file = self.output_dir / f'result_{scraped_result.content_hash}.json'
+        try:
+            with abs_file.open("w", encoding="utf-8") as fout:
+                json.dump(scraped_result.model_dump(), fout, indent=4)
+                return f"Content successfully written to {abs_file}"
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+        return f"Failed to write to {abs_file}: {str(e)}"
 
 def kickoff():
     long_form_writer_flow = LongFormWriterFlow()
