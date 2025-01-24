@@ -1,3 +1,5 @@
+import hashlib
+
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from typing import List
@@ -5,9 +7,20 @@ from pydantic import BaseModel, Field
 from crewai_tools import SerperDevTool
 
 
-class WebResearchOutput(BaseModel):
-    research_entries: List[str] = Field(..., description="List of urls to scrape")
+# This is the default return schema from Serper
+class RawResearchEntry(BaseModel):
+    title: str = Field(..., description="Article title or summarized title that is no longer than 7 words")
+    url: str = Field(..., description="URL of the raw text context scraped")
+    scraped_content: str = Field(..., description="Text scraped from the web")
 
+    @property
+    def content_hash(self) -> str:
+        """Generate a hash string based on the model's content."""
+        hash_input = self.url
+        return hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+
+class WebResearchOutput(BaseModel):
+    research_entries: List[RawResearchEntry] = Field(..., description="List of research entries extracted from the web")
 
 
 @CrewBase

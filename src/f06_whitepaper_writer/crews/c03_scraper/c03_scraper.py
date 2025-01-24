@@ -14,10 +14,12 @@ class ScrapeResult(BaseModel):
     scraped_content: str = Field(..., description="Text scraped from the web")
 
     @property
-    def content_hash(self) -> str:
-        """Generate a hash string based on the model's content."""
+    def filename(self) -> str:
+        """Generate a hash string based filename."""
         hash_input = self.url
-        return hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+        hash_str = hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+
+        return f'result_{hash_str}.json'
 
 
 @CrewBase
@@ -43,6 +45,14 @@ class C03Scraper:
         """Task to save research results as JSON files."""
         return Task(
             config=self.tasks_config['page_scraper_task'],
+            output_pydantic=ScrapeResult,
+        )
+
+    @task
+    def save_result_task(self) -> Task:
+        """Task to save research results as JSON files."""
+        return Task(
+            config=self.tasks_config['save_result_task'],
             output_pydantic=ScrapeResult,
         )
 
