@@ -1,0 +1,9 @@
+page_scraper_task:
+  description: >
+    Scrape all content from a website corresponding to article text.
+  expected_output: >
+    1. Receive a URL
+    2. Scrape the text from the website
+    3. Produce a scrape result
+  agent: page_scraper
+
