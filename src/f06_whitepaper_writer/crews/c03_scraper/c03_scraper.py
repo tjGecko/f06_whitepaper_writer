@@ -53,7 +53,7 @@ class C03Scraper:
         """Task to save research results as JSON files."""
         return Task(
             config=self.tasks_config['save_result_task'],
-            output_pydantic=ScrapeResult,
+            context=[self.page_scraper_task],
         )
 
     @crew

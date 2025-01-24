@@ -34,8 +34,8 @@ class LongFormWriterFlow(Flow):
             print(f'entry: {entry}')
             # print(f'entry.url: {entry[1]}')
             crew3_inputs['scrape_url'] = entry.url
-            abs_file = self.output_dir / f'result_{entry.content_hash}.json'
-            # crew3_inputs['save_file'] = f'result_{entry.content_hash}.json'
+            # abs_file = self.output_dir / f'result_{entry.content_hash}.json'
+            crew3_inputs['save_file'] = f'result_{entry.content_hash}.json'
             crew3_inputs['output_dir'] = str(self.output_dir)
             # crew3_inputs['save_file'] = str(abs_file)
 
